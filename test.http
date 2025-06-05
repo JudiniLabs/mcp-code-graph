@@ -1,0 +1,28 @@
+@org_id=83c866d4-b5c0-470c-b8ac-9adef731c947
+@api_key=sk-1b27671f-8a36-4a8f-b16e-0404bfbb46ea
+@agent_id=3238fe03-8db2-4e7d-bfb4-b69a265ce245
+
+### List all available CodeGPT agents
+GET https://api.codegpt.co/api/v1/agent
+Authorization: Bearer {{api_key}}
+CodeGPT-Org-Id: {{org_id}}
+Accept: application/json
+
+### Chat with a CodeGPT agent
+POST https://api.codegpt.co/api/v1/chat/completions
+Authorization: Bearer {{api_key}}
+CodeGPT-Org-Id: {{org_id}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "agentId": "{{agent_id}}",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Find the button to sign up"
+    }
+  ],
+  "format": "text",
+  "stream": false
+}

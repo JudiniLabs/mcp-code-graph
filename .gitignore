@@ -1,0 +1,22 @@
+
+# Node modules
+node_modules/
+
+# Build output
+# Allow build output to be committed
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.vscode/
+*.idea/

@@ -1,0 +1,22 @@
+{
+	"type": "module",
+	"bin": {
+		"CodeGPT": "./build/index.js"
+	},
+	"scripts": {
+		"build": "tsc && chmod 755 build/index.js"
+	},
+	"files": [
+		"build"
+	],
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.8.0",
+		"zod": "^3.24.2",
+		"dotenv": "^16.4.7"
+	},
+	"packageManager": "pnpm@9.8.0+sha512.8e4c3550fb500e808dbc30bb0ce4dd1eb614e30b1c55245f211591ec2cdf9c611cabd34e1364b42f564bd54b3945ed0f49d61d1bbf2ec9bd74b866fcdc723276",
+	"devDependencies": {
+		"@types/node": "^22.13.14",
+		"typescript": "^5.8.2"
+	}
+}
