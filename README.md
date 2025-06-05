@@ -1,6 +1,6 @@
 # CodeGPT MCP Server
 
-A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) server that enables seamless interaction with CodeGPT agents and Code Graphs. This server provides a standardized interface for communicating with CodeGPT's AI agents, making it easy to integrate CodeGPT's capabilities into your applications.
+A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) server that enables seamless interaction with Code Graphs by CodeGPT
 
 ## Features
 
