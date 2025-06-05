@@ -53,28 +53,11 @@ Add the following configuration to your MCP client:
 	"mcpServers": {
 		"CodeGPT": {
 			"command": "node",
-			"args": ["/path/to/build/directory", "/index.js"],
+			"args": ["/path/to/build/directory", "/intex.js"],
 			"env": {
 				"CODEGPT_API_KEY": "your-api-key",
-				"CODEGPT_ORG_ID": "optional"
-			}
-		}
-	}
-}
-```
-
-### Graphs
-
-```json
-{
-	"mcpServers": {
-		"CodeGPT": {
-			"command": "node",
-			"args": ["/path/to/build/directory", "/graph.js"],
-			"env": {
-				"CODEGPT_API_KEY": "your-api-key",
+				"CODEGPT_GRAPH_ID": "your-graph-id"
 				"CODEGPT_ORG_ID": "optional",
-            "CODEGPT_GRAPH_ID": "your-graph-id"
 			}
 		}
 	}
@@ -83,29 +66,9 @@ Add the following configuration to your MCP client:
 
 ## Available Tools
 
-### 1. list-agents
+[agregar las tools from graphs.ts]
 
-Lists all available CodeGPT agents associated with your account.
 
-### 2. ask-to-an-agent
-
-Sends a message to a specific CodeGPT agent and receives a response.
-
-## Testing
-
-1. Copy the HTTP test file template:
-
-   ```bash
-   cp .http.example .http
-   ```
-
-2. Update the test file with your credentials:
-
-   - API key
-   - Organization ID
-   - Agent ID
-
-3. Use REST Client in VS Code or any HTTP client to test the endpoints
 
 ## Error Handling
 
@@ -116,7 +79,7 @@ The server handles various error scenarios:
 - Invalid agent IDs or messages
 - Request timeout handling
 
-## Development
+## Development (revisar)
 
 ### Project Structure
 
@@ -128,19 +91,6 @@ The server handles various error scenarios:
 └── tsconfig.json    # TypeScript configuration
 ```
 
-### Building
-
-```bash
-pnpm build
-```
-
-### TypeScript Configuration
-
-The project uses TypeScript with the following key configurations:
-
-- Target: ES2022
-- Module: Node16
-- Strict type checking enabled
 
 ## Support
 
