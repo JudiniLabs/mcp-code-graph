@@ -48,27 +48,50 @@ Set up your environment variables:
 
 Add the following configuration to your MCP client:
 
+### CodeGPT Extension
 ```json
 {
 	"mcpServers": {
 		"CodeGPT": {
 			"command": "node",
-			"args": ["/path/to/build/directory", "/intex.js"],
+			"args": ["/path/to/build/directory", "/index.js"],
 			"env": {
 				"CODEGPT_API_KEY": "your-api-key",
-				"CODEGPT_GRAPH_ID": "your-graph-id"
-				"CODEGPT_ORG_ID": "optional",
+				"CODEGPT_ORG_ID": "optional"
 			}
 		}
 	}
 }
 ```
 
+### Visual Studio Code
+```json
+   "mcp": {
+        "servers": {
+            "codegpt-deep-graph-mcp": {
+                "type": "stdio",
+                "command": "/Users/danipower/.nvm/versions/node/v20.10.0/bin/node",
+                "args": [
+                    "/Users/danipower/Proyectos/Judini/mcp-code-graph/build", "/index.js"
+                ]
+            }
+        }
+    }
+```
+
 ## Available Tools
 
-[agregar las tools from graphs.ts]
+`list_graphs`: List all available repository graphs that you have access to. Returns basic information about each graph including the graph ID, repository name with branch, and description. Use this tool when you need to discover available graphs or when CODEGPT_GRAPH_ID is not set in the environment.
 
+`get_code`: Get the complete code implementation of a specific functionality (class, function, method, etc.) from the repository graph. This is the primary tool for code retrieval and should be prioritized over other tools. The repository is represented as a graph where each node contains code, documentation, and relationships to other nodes. Use this when you need to examine the actual implementation of any code entity.
 
+`find_direct_connections`: Explore the immediate relationships of a functionality within the code graph. This reveals first-level connections including: parent functionalities that reference this node, child functionalities that this node directly calls or uses, declaration/definition relationships, and usage patterns. Essential for understanding code dependencies and architecture. The repository is represented as a connected graph where each node (function, class, file, etc.) has relationships with other nodes.
+
+`nodes_semantic_search`: Search for code functionalities across the repository graph using semantic similarity based on natural language queries. This tool finds relevant functions, classes, methods, and other code entities that match the conceptual meaning of your query, even if they don't contain the exact keywords. Perfect for discovering related functionality, finding similar implementations, or exploring unfamiliar codebases. The search operates on the semantic understanding of code purpose and behavior.
+
+`docs_semantic_search`: Search through repository documentation using semantic similarity to find relevant information, guides, API documentation, README content, and explanatory materials. This tool specifically targets documentation files (markdown, rst, etc.) rather than code, making it ideal for understanding project setup, architecture decisions, usage instructions, and conceptual explanations. Use this when you need context about how the repository works rather than examining the actual code implementation.
+
+`get_usage_dependency_links`: Generate a comprehensive adjacency list showing all functionalities that would be affected by changes to a specific code entity. This performs deep dependency analysis through the code graph to identify the complete impact radius of modifications. Essential for impact analysis, refactoring planning, and understanding code coupling. The result shows which functionalities depend on the target entity either directly or through a chain of dependencies, formatted as 'file_path::functionality_name' pairs.
 
 ## Error Handling
 
@@ -78,8 +101,6 @@ The server handles various error scenarios:
 - HTTP communication errors
 - Invalid agent IDs or messages
 - Request timeout handling
-
-## Development (revisar)
 
 ### Project Structure
 
@@ -91,7 +112,6 @@ The server handles various error scenarios:
 └── tsconfig.json    # TypeScript configuration
 ```
 
-
 ## Support
 
 For support and feedback:
@@ -101,4 +121,4 @@ For support and feedback:
 
 ## License
 
-[License information here]
+[MIT License](https://opensource.org/licenses/MIT)

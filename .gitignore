@@ -3,7 +3,7 @@
 node_modules/
 
 # Build output
-# Allow build output to be committed
+build/
 
 # Logs
 *.log

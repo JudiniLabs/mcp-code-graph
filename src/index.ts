@@ -5,11 +5,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// const CODEGPT_API_BASE = "https://api-deno-dev.codegpt.co/api/v1"; // beta
-const CODEGPT_API_BASE = "http://localhost:8000/api/v1"; // beta
+const CODEGPT_API_BASE = "https://api-deno-dev.codegpt.co/api/v1"; // beta
 
 const server = new McpServer({
-	name: "CodeGPT Graphs",
+	name: "CodeGPT Deep Graph MCP",
 	version: "1.0.1",
 	config: {
 		timeout: 120000,
