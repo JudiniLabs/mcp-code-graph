@@ -3,9 +3,14 @@ A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) se
 
 <img width="1090" alt="Screenshot 2025-06-11 at 13 58 37" src="https://github.com/user-attachments/assets/5794fc46-632c-4cf2-bdc0-d71b100039b0" />
 
-## Available Tools
+## How this works
+This MCP allows you to interact with the knowledge graphs available in your CodeGPT account.
 
 <img width="1373" alt="Screenshot 2025-06-11 at 14 01 15" src="https://github.com/user-attachments/assets/a588bafc-d5a8-4955-8d48-3addaf3ed71c" />
+
+You’ll be able to use these advanced graph-based queries across different MCP Hosts such as ChatGPT, Cursor, Windsurf, GitHub Copilot, Claude Desktop, and others. 
+
+## Available Tools
 
 `list_graphs`: List all available repository graphs that you have access to. Returns basic information about each graph including the graph ID, repository name with branch, and description. Use this tool when you need to discover available graphs or when CODEGPT_GRAPH_ID is not set in the environment.
 
@@ -24,9 +29,9 @@ A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) se
 Before using the CodeGPT MCP Server, ensure you have:
 
 1. A CodeGPT account (sign up at [app.codegpt.co](https://app.codegpt.co))
-2. A CodeGPT [Code Graph Agent](https://help.codegpt.co/en/articles/9912447-graphs-repositories)
+2. Uploaded a repository to [Code Graph](https://help.codegpt.co/en/articles/9912447-code-graphs)
 3. An API key from [CodeGPT API Keys page](https://app.codegpt.co/user/api-keys)
-4. Your Organization ID (recommended)
+4. Your Organization ID (optional)
 
 ## Installation
 
@@ -76,11 +81,28 @@ Add the following configuration to your MCP client:
 }
 ```
 
+## Claude Desktop
+Add the following configuration to the `claude_desktop_config.json` file in your Claude Desktop installation directory:
+```json
+{
+	"mcpServers": {
+		"Code Graph MCP Server": {
+			"command": "node",
+			"args": ["/path/to/build/directory", "/index.js"],
+			"env": {
+				"CODEGPT_API_KEY": "your-api-key",
+				"CODEGPT_ORG_ID": "optional"
+			}
+		}
+	}
+}
+```
+
 ### CodeGPT Extension
 ```json
 {
 	"mcpServers": {
-		"CodeGPT": {
+		"Code Graph MCP Server": {
 			"command": "node",
 			"args": ["/path/to/build/directory", "/index.js"],
 			"env": {
@@ -97,12 +119,13 @@ Add the folloging configuration to your mcp.json file in the .vscode folder:
 ```json
    {
       "servers": {
-        "codegpt-deep-graph-mcp": {
-            "type": "stdio",
-            "command": "/Users/danipower/.nvm/versions/node/v20.10.0/bin/node",
-            "args": [
-                "/Users/danipower/Proyectos/Judini/mcp-code-graph/build", "/index.js"
-            ]
+         "Code Graph MCP Server": {
+            "command": "node",
+            "args": ["/path/to/build/directory", "/index.js"],
+            "env": {
+               "CODEGPT_API_KEY": "your-api-key",
+               "CODEGPT_ORG_ID": "optional"
+            }
          }
       }
    }
@@ -114,7 +137,6 @@ The server handles various error scenarios:
 
 - Missing API key validation
 - HTTP communication errors
-- Invalid agent IDs or messages
 - Request timeout handling
 
 ### Project Structure
@@ -123,8 +145,9 @@ The server handles various error scenarios:
 ├── src/
 │   └── index.ts      # Main server implementation
 ├── build/            # Compiled JavaScript files
-├── .env             # Environment configuration
-└── tsconfig.json    # TypeScript configuration
+├── .env             # Environment configuration(not included in version control)
+├── .gitignore       # Git ignore rules
+└── package.json    # Project metadata and dependencies
 ```
 
 ## Support
