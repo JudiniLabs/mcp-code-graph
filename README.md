@@ -1,4 +1,4 @@
-# CodeGPT- Deep Graph Codebase MCP Server
+# CodeGPT- Code Graph MCP Server
 A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) server that enables seamless interaction with Code Graphs by CodeGPT
 
 <img width="1094" alt="Screenshot 2025-06-11 at 14 17 47" src="https://github.com/user-attachments/assets/26b5223c-bfac-41c6-9796-f11e039f640d" />
