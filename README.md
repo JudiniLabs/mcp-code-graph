@@ -67,51 +67,51 @@ Add the following configuration to your MCP client:
 
 ### Cursor
 ```json
-{
-	"mcpServers": {
-		"CodeGPT": {
-			"command": "node",
-			"args": ["/path/to/build/directory", "/index.js"],
-			"env": {
-				"CODEGPT_API_KEY": "your-api-key",
-				"CODEGPT_ORG_ID": "optional"
-			}
-		}
-	}
-}
+   {
+      "mcpServers": {
+         "CodeGPT": {
+            "command": "node",
+            "args": ["/path/to/build/directory", "/index.js"],
+            "env": {
+               "CODEGPT_API_KEY": "your-api-key",
+               "CODEGPT_ORG_ID": "optional"
+            }
+         }
+      }
+   }
 ```
 
 ## Claude Desktop
 Add the following configuration to the `claude_desktop_config.json` file in your Claude Desktop installation directory:
 ```json
-{
-	"mcpServers": {
-		"Code Graph MCP Server": {
-			"command": "node",
-			"args": ["/path/to/build/directory", "/index.js"],
-			"env": {
-				"CODEGPT_API_KEY": "your-api-key",
-				"CODEGPT_ORG_ID": "optional"
-			}
-		}
-	}
-}
+   {
+      "mcpServers": {
+         "Code Graph MCP Server": {
+            "command": "node",
+            "args": ["/path/to/build/directory", "/index.js"],
+            "env": {
+               "CODEGPT_API_KEY": "your-api-key",
+               "CODEGPT_ORG_ID": "optional"
+            }
+         }
+      }
+   }
 ```
 
 ### CodeGPT Extension
 ```json
-{
-	"mcpServers": {
-		"Code Graph MCP Server": {
-			"command": "node",
-			"args": ["/path/to/build/directory", "/index.js"],
-			"env": {
-				"CODEGPT_API_KEY": "your-api-key",
-				"CODEGPT_ORG_ID": "optional"
-			}
-		}
-	}
-}
+   {
+      "mcpServers": {
+         "Code Graph MCP Server": {
+            "command": "node",
+            "args": ["/path/to/build/directory", "/index.js"],
+            "env": {
+               "CODEGPT_API_KEY": "your-api-key",
+               "CODEGPT_ORG_ID": "optional"
+            }
+         }
+      }
+   }
 ```
 
 ### Visual Studio Code
