@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const CODEGPT_API_BASE = "https://api-deno-dev.codegpt.co/api/v1"; // beta
+const CODEGPT_API_BASE = "https://api-mcp.codegpt.co/api/v1";
 
 const server = new McpServer({
 	name: "CodeGPT Deep Graph MCP",
