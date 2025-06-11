@@ -48,6 +48,22 @@ Set up your environment variables:
 
 Add the following configuration to your MCP client:
 
+### Cursor
+```json
+{
+	"mcpServers": {
+		"CodeGPT": {
+			"command": "node",
+			"args": ["/path/to/build/directory", "/index.js"],
+			"env": {
+				"CODEGPT_API_KEY": "your-api-key",
+				"CODEGPT_ORG_ID": "optional"
+			}
+		}
+	}
+}
+```
+
 ### CodeGPT Extension
 ```json
 {
@@ -65,18 +81,19 @@ Add the following configuration to your MCP client:
 ```
 
 ### Visual Studio Code
+Add the folloging configuration to your mcp.json file in the .vscode folder:
 ```json
-   "mcp": {
-        "servers": {
-            "codegpt-deep-graph-mcp": {
-                "type": "stdio",
-                "command": "/Users/danipower/.nvm/versions/node/v20.10.0/bin/node",
-                "args": [
-                    "/Users/danipower/Proyectos/Judini/mcp-code-graph/build", "/index.js"
-                ]
-            }
-        }
-    }
+   {
+      "servers": {
+        "codegpt-deep-graph-mcp": {
+            "type": "stdio",
+            "command": "/Users/danipower/.nvm/versions/node/v20.10.0/bin/node",
+            "args": [
+                "/Users/danipower/Proyectos/Judini/mcp-code-graph/build", "/index.js"
+            ]
+         }
+      }
+   }
 ```
 
 ## Available Tools
