@@ -47,7 +47,9 @@ Before using the CodeGPT MCP Server, ensure you have:
 
 ## Configuration
 
-Set up your environment variables:
+Set up your environment variables, or you could add them to your MCP client configuration.
+
+### Environment Variables in .env file
 
 1. Copy the example environment file:
 
