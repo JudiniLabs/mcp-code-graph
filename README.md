@@ -35,6 +35,7 @@ Before using the CodeGPT MCP Server, ensure you have:
 
 ## Installation
 
+## Using pnpm
 1. Clone the repository
 2. Install dependencies:
    ```bash
@@ -45,92 +46,61 @@ Before using the CodeGPT MCP Server, ensure you have:
    pnpm build
    ```
 
-## Configuration
+## Using npx
+1. Add the following to your MCP client configuration:
+```json
+{
+   "mcpServers": {
+      "Deep Graph MCP - CodeGPT": {
+         "command": "npx",
+         "args": ["-y", "github:JudiniLabs/mcp-code-graph"],
+         "env": {
+            "CODEGPT_API_KEY": "your-api-key",
+            "CODEGPT_GRAPH_ID": "your-graph-id", // optional
+            "CODEGPT_ORG_ID": "your-org-id" // optional
+         }
+      }
+   }
+}
+```
+
+## Or using clone and run the Server (STDIO mode)
+This is the recommended way to run the server locally. (stdio mode is the default mode for MCP servers)
+1. Clone the repository:
+```bash
+git clone https://github.com/JudiniLabs/mcp-code-graph.git
+cd mcp-code-graph
+```
 
 Set up your environment variables, or you could add them to your MCP client configuration.
 
 ### Environment Variables in .env file
 
 1. Copy the example environment file:
-
-   ```bash
-   cp .env.example .env
-   ```
+```bash
+cp .env.example .env
+```
 
 2. Configure the required environment variables:
-   ```
-   CODEGPT_API_KEY=your-api-key
-   CODEGPT_ORG_ID=your-org-id  # Optional but recommended
-   ```
+```
+CODEGPT_API_KEY=your-api-key
+CODEGPT_ORG_ID=your-org-id  # Optional
+CODEGPT_GRAPH_ID=your-graph-id  # Optional
+```
 
 ## Integration with MCP Client
 
-Add the following configuration to your MCP client:
+Add the following configuration to your MCP client (Cursor, Claude Desktop, Windsurf, etc.)
 
-### Cursor
 ```json
-   {
-      "mcpServers": {
-         "CodeGPT": {
-            "command": "node",
-            "args": ["/path/to/build/directory", "/index.js"],
-            "env": {
-               "CODEGPT_API_KEY": "your-api-key",
-               "CODEGPT_ORG_ID": "optional"
-            }
-         }
+{
+   "mcpServers": {
+      "Code Graph MCP Server": {
+         "command": "node",
+         "args": ["/path/to/build/directory", "/index.js"]
       }
    }
-```
-
-## Claude Desktop
-Add the following configuration to the `claude_desktop_config.json` file in your Claude Desktop installation directory:
-```json
-   {
-      "mcpServers": {
-         "Code Graph MCP Server": {
-            "command": "node",
-            "args": ["/path/to/build/directory", "/index.js"],
-            "env": {
-               "CODEGPT_API_KEY": "your-api-key",
-               "CODEGPT_ORG_ID": "optional"
-            }
-         }
-      }
-   }
-```
-
-### CodeGPT Extension
-```json
-   {
-      "mcpServers": {
-         "Code Graph MCP Server": {
-            "command": "node",
-            "args": ["/path/to/build/directory", "/index.js"],
-            "env": {
-               "CODEGPT_API_KEY": "your-api-key",
-               "CODEGPT_ORG_ID": "optional"
-            }
-         }
-      }
-   }
-```
-
-### Visual Studio Code
-Add the folloging configuration to your mcp.json file in the .vscode folder:
-```json
-   {
-      "servers": {
-         "Code Graph MCP Server": {
-            "command": "node",
-            "args": ["/path/to/build/directory", "/index.js"],
-            "env": {
-               "CODEGPT_API_KEY": "your-api-key",
-               "CODEGPT_ORG_ID": "optional"
-            }
-         }
-      }
-   }
+}
 ```
 
 ## Error Handling
