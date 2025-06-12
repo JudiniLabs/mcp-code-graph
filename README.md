@@ -35,17 +35,6 @@ Before using the CodeGPT MCP Server, ensure you have:
 
 ## Installation
 
-## Using pnpm
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   pnpm install
-   ```
-3. Build the project:
-   ```bash
-   pnpm build
-   ```
-
 ## Using npx
 1. Add the following to your MCP client configuration:
 ```json
@@ -66,10 +55,19 @@ Before using the CodeGPT MCP Server, ensure you have:
 
 ## Or using clone and run the Server (STDIO mode)
 This is the recommended way to run the server locally. (stdio mode is the default mode for MCP servers)
+
 1. Clone the repository:
 ```bash
 git clone https://github.com/JudiniLabs/mcp-code-graph.git
 cd mcp-code-graph
+```
+1. Install dependencies:
+```bash
+pnpm install
+```
+1. Build the project:
+```bash
+pnpm build
 ```
 
 Set up your environment variables, or you could add them to your MCP client configuration.
