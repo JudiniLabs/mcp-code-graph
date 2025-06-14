@@ -1,9 +1,9 @@
 {
-	"name": "@codegpt/mcp-code-graph",
-	"version": "1.0.1",
+	"name": "mcp-code-graph",
+	"version": "1.0.3",
 	"type": "module",
 	"bin": {
-		"CodeGPT": "build/index.js"
+		"mcp-code-graph": "build/index.js"
 	},
 	"scripts": {
 		"build": "tsc && chmod +x build/index.js",
@@ -24,5 +24,17 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"keywords": [
+		"mcp",
+		"model-context-protocol",
+		"code-graph",
+		"codegpt"
+  	],
+	"description": "MCP server for CodeGPT code graph analysis",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/JudiniLabs/mcp-code-graph"
+	},
+	"license": "MIT"
 }

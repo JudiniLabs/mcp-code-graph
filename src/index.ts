@@ -397,9 +397,17 @@ server.tool(
 );
 
 async function main() {
-	if (!CODEGPT_API_KEY) {
-		throw new Error("CODEGPT_API_KEY is not set");
-	}
+	// Debug: mostrar todas las variables de entorno
+    console.error("=== DEBUG INFO ===");
+    console.error("CODEGPT_API_KEY:", CODEGPT_API_KEY ? "SET" : "NOT SET");
+    console.error("CODEGPT_ORG_ID:", CODEGPT_ORG_ID ? "SET" : "NOT SET");
+    console.error("CODEGPT_GRAPH_ID:", CODEGPT_GRAPH_ID ? "SET" : "NOT SET");
+    console.error("All env vars:", Object.keys(process.env).filter(key => key.startsWith('CODEGPT')));
+    console.error("==================");
+    
+    if (!CODEGPT_API_KEY) {
+        throw new Error("CODEGPT_API_KEY is not set");
+    }
 	
 	// Only require CODEGPT_GRAPH_ID if we're in single-graph mode
 	if (!CODEGPT_GRAPH_ID) {
