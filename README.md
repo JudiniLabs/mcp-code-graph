@@ -53,7 +53,7 @@ Before using the CodeGPT MCP Server, ensure you have:
 }
 ```
 
-## Or using clone and run the Server (STDIO mode)
+## Or clone and run the Server (STDIO mode)
 This is the recommended way to run the server locally. (stdio mode is the default mode for MCP servers)
 
 1. Clone the repository:
