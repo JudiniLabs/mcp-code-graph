@@ -42,7 +42,7 @@ Before using the CodeGPT MCP Server, ensure you have:
    "mcpServers": {
       "Deep Graph MCP - CodeGPT": {
          "command": "npx",
-         "args": ["-y", "github:JudiniLabs/mcp-code-graph"],
+         "args": ["-y", "mcp-code-graph@latest"],
          "env": {
             "CODEGPT_API_KEY": "your-api-key",
             "CODEGPT_GRAPH_ID": "your-graph-id", // optional
