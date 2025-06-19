@@ -1,11 +1,20 @@
 #!/usr/bin/env node
 
+// Agrega esto al principio, antes de cualquier otra cosa
+console.error('MCP Code Graph starting...');
+console.error('Environment check:', {
+  CODEGPT_API_KEY: process.env.CODEGPT_API_KEY ? 'SET' : 'NOT SET',
+  CODEGPT_ORG_ID: process.env.CODEGPT_ORG_ID ? 'SET' : 'NOT SET'
+});
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import dotenv from "dotenv";
 
 dotenv.config();
+
+console.error('Imports loaded successfully');
 
 const CODEGPT_API_BASE = "https://api-mcp.codegpt.co/api/v1";
 
@@ -397,31 +406,38 @@ server.tool(
 );
 
 async function main() {
-	// Debug: mostrar todas las variables de entorno
-    console.error("=== DEBUG INFO ===");
-    console.error("CODEGPT_API_KEY:", CODEGPT_API_KEY ? "SET" : "NOT SET");
-    console.error("CODEGPT_ORG_ID:", CODEGPT_ORG_ID ? "SET" : "NOT SET");
-    console.error("CODEGPT_GRAPH_ID:", CODEGPT_GRAPH_ID ? "SET" : "NOT SET");
-    console.error("All env vars:", Object.keys(process.env).filter(key => key.startsWith('CODEGPT')));
-    console.error("==================");
-    
-    if (!CODEGPT_API_KEY) {
-        throw new Error("CODEGPT_API_KEY is not set");
+    try {
+        console.error("=== DEBUG INFO ===");
+        console.error("CODEGPT_API_KEY:", CODEGPT_API_KEY ? "SET" : "NOT SET");
+        console.error("CODEGPT_ORG_ID:", CODEGPT_ORG_ID ? "SET" : "NOT SET");
+        console.error("CODEGPT_GRAPH_ID:", CODEGPT_GRAPH_ID ? "SET" : "NOT SET");
+        console.error("All env vars:", Object.keys(process.env).filter(key => key.startsWith('CODEGPT')));
+        console.error("==================");
+        
+        if (!CODEGPT_API_KEY) {
+            throw new Error("CODEGPT_API_KEY is not set");
+        }
+        
+        console.error("About to create StdioServerTransport...");
+        const transport = new StdioServerTransport();
+        console.error("StdioServerTransport created successfully");
+        
+        console.error("About to connect server...");
+        await server.connect(transport);
+        console.error("CodeGPT Agents MCP Server running on stdio");
+    } catch (error) {
+        console.error("Error in main():", error);
+        if (error instanceof Error) {
+            console.error("Error stack:", error.stack);
+        }
+        process.exit(1);
     }
-	
-	// Only require CODEGPT_GRAPH_ID if we're in single-graph mode
-	if (!CODEGPT_GRAPH_ID) {
-		console.error("CODEGPT_GRAPH_ID is not set - running in multi-graph mode. Use list-graphs tool to discover available graphs and provide graphId parameter to other tools.");
-	} else {
-		console.error("CODEGPT_GRAPH_ID is set - running in single-graph mode for graph:", CODEGPT_GRAPH_ID);
-	}
-
-	const transport = new StdioServerTransport();
-	await server.connect(transport);
-	console.error("CodeGPT Agents MCP Server running on stdio");
 }
 
 main().catch((error) => {
 	console.error("Fatal error in main():", error);
+	if (error instanceof Error) {
+		console.error("Error stack:", error.stack);
+	}
 	process.exit(1);
 });

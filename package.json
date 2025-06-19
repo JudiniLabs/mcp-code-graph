@@ -1,17 +1,21 @@
 {
 	"name": "mcp-code-graph",
-	"version": "1.0.3",
+	"version": "1.0.10",
+	"description": "MCP server for CodeGPT code graph analysis",
+	"license": "MIT",
 	"type": "module",
 	"bin": {
-		"mcp-code-graph": "build/index.js"
-	},
-	"scripts": {
-		"build": "tsc && chmod +x build/index.js",
-		"prepare": "npm run build"
+		"mcp-code-graph": "dist/index.mjs"
 	},
 	"files": [
-		"build"
+		"dist",
+		"simple-debug.js"
 	],
+	"scripts": {
+		"build": "tsc && shx chmod +x dist/*.js && shx mv dist/index.js dist/index.mjs",
+		"prepare": "npm run build",
+		"watch": "tsc --watch"
+	},
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "^1.12.1",
 		"dotenv": "^16.5.0",
@@ -20,6 +24,7 @@
 	"packageManager": "pnpm@9.8.0+sha512.8e4c3550fb500e808dbc30bb0ce4dd1eb614e30b1c55245f211591ec2cdf9c611cabd34e1364b42f564bd54b3945ed0f49d61d1bbf2ec9bd74b866fcdc723276",
 	"devDependencies": {
 		"@types/node": "^22.15.30",
+		"shx": "^0.3.4",
 		"typescript": "^5.8.3"
 	},
 	"publishConfig": {
@@ -30,11 +35,9 @@
 		"model-context-protocol",
 		"code-graph",
 		"codegpt"
-  	],
-	"description": "MCP server for CodeGPT code graph analysis",
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/JudiniLabs/mcp-code-graph"
-	},
-	"license": "MIT"
+	}
 }
