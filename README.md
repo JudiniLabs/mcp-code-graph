@@ -92,14 +92,69 @@ Add the following configuration to your MCP client (Cursor, Claude Desktop, Wind
 
 ```json
 {
-   "mcpServers": {
-      "Code Graph MCP Server": {
-         "command": "node",
-         "args": ["/path/to/build/directory", "/index.js"]
-      }
-   }
+  "mcpServers": {
+    "Deep Graph MCP Server": {
+      "command": "/path/to/node",
+      "args": ["/path/to/mcp-code-graph/dist/index.js"],
+    }
+  }
 }
 ```
+
+# Adding to Claude Code
+
+Follow these steps to integrate MCP Code Graph 9 with Claude Code.
+
+## Quick Setup
+
+```bash
+claude mcp add "Deep Graph MCP Server" \
+  -e CODEGPT_API_KEY=your-api-key-here \
+  -e CODEGPT_ORG_ID=your-org-id-here \
+  -- /path/to/node \
+  /path/to/mcp-code-graph/dist/index.js
+```
+
+**For team sharing**, add the `-s project` flag:
+
+```bash
+claude mcp add "Deep Graph MCP Server" -s project \
+  -e CODEGPT_API_KEY=your-api-key-here \
+  -e CODEGPT_ORG_ID=your-org-id-here \
+  -- /path/to/node \
+  /path/to/mcp-code-graph/dist/index.js
+```
+
+## Manual Configuration
+
+Add to your `.mcp.json` file:
+
+```json
+{
+  "mcpServers": {
+    "Deep Graph MCP Server": {
+      "command": "/path/to/node",
+      "args": ["/path/to/mcp-code-graph/dist/index.js"],
+      "env": {
+        "CODEGPT_API_KEY": "your-api-key-here",
+        "CODEGPT_ORG_ID": "your-org-id-here"
+      }
+    }
+  }
+}
+```
+
+## Verification
+
+```bash
+# Verify installation
+claude mcp list
+
+# Check server status
+/mcp
+```
+
+Replace `/path/to/node` with your Node.js path and update the credentials with your actual CodeGPT API key and organization ID.
 
 ## Error Handling
 

@@ -5,14 +5,13 @@
 	"license": "MIT",
 	"type": "module",
 	"bin": {
-		"mcp-code-graph": "dist/index.mjs"
+		"mcp-code-graph": "dist/index.js"
 	},
 	"files": [
-		"dist",
-		"simple-debug.js"
+		"dist"
 	],
 	"scripts": {
-		"build": "tsc && shx chmod +x dist/*.js && shx mv dist/index.js dist/index.mjs",
+		"build": "tsc && chmod +x dist/index.js",
 		"prepare": "npm run build",
 		"watch": "tsc --watch"
 	},
