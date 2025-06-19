@@ -103,7 +103,7 @@ Add the following configuration to your MCP client (Cursor, Claude Desktop, Wind
 
 # Adding to Claude Code
 
-Follow these steps to integrate MCP Code Graph 9 with Claude Code.
+Follow these steps to integrate Deep Graph MCP Server with Claude Code.
 
 ## Quick Setup
 
