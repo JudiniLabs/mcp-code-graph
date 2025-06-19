@@ -1,7 +1,7 @@
 {
 	"name": "mcp-code-graph",
-	"version": "1.0.10",
-	"description": "MCP server for CodeGPT code graph analysis",
+	"version": "1.0.12",
+	"description": "Code Graph MCP Server",
 	"license": "MIT",
 	"type": "module",
 	"bin": {

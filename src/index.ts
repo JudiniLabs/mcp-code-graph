@@ -29,9 +29,9 @@ const server = new McpServer({
 	},
 });
 
-const CODEGPT_ORG_ID = process.env.CODEGPT_ORG_ID || "";
-const CODEGPT_API_KEY = process.env.CODEGPT_API_KEY || "";
-const CODEGPT_GRAPH_ID = process.env.CODEGPT_GRAPH_ID || "";
+const CODEGPT_API_KEY = process.env.CODEGPT_API_KEY || process?.argv?.at(2) || "";
+const CODEGPT_ORG_ID = process.env.CODEGPT_ORG_ID || process?.argv?.at(3) || "";
+const CODEGPT_GRAPH_ID = process.env.CODEGPT_GRAPH_ID || process?.argv?.at(4) || "";
 
 // Helper function to get the graph ID
 const getGraphId = (providedGraphId?: string): string => {

@@ -1,14 +1,13 @@
 # CodeGPT- Code Graph MCP Server
 A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) server that enables seamless interaction with Code Graphs by CodeGPT
 
-<img width="1094" alt="Screenshot 2025-06-11 at 14 17 47" src="https://github.com/user-attachments/assets/26b5223c-bfac-41c6-9796-f11e039f640d" />
-
-## How this works
-This MCP allows you to interact with the knowledge graphs available in your CodeGPT account.
-
 <img width="1373" alt="Screenshot 2025-06-11 at 14 01 15" src="https://github.com/user-attachments/assets/a588bafc-d5a8-4955-8d48-3addaf3ed71c" />
 
-You’ll be able to use these advanced graph-based queries across different MCP Hosts such as ChatGPT, Cursor, Windsurf, GitHub Copilot, Claude Desktop, and others. 
+## How this works
+
+This MCP allows you to interact with the knowledge graphs available in your CodeGPT account.
+
+You’ll be able to use these advanced graph-based queries across different MCP Hosts such as ChatGPT, Cursor, Windsurf, GitHub Copilot, Claude Desktop, and others.
 
 ## Available Tools
 
@@ -36,68 +35,20 @@ Before using the CodeGPT MCP Server, ensure you have:
 ## Installation
 
 ## Using npx
-1. Add the following to your MCP client configuration:
+Add the following configuration to your MCP client (CodeGPT Extension, Cursor, Copilot, Claude Desktop, Windsurf, etc.):
+
 ```json
 {
    "mcpServers": {
-      "Deep Graph MCP - CodeGPT": {
+      "Code Graph MCP Server": {
          "command": "npx",
-         "args": ["-y", "mcp-code-graph@latest"],
-         "env": {
-            "CODEGPT_API_KEY": "your-api-key",
-            "CODEGPT_GRAPH_ID": "your-graph-id", // optional
-            "CODEGPT_ORG_ID": "your-org-id" // optional
-         }
+         "args": ["-y" , "mcp-code-graph@latest", 
+         "CODEGPT_API_KEY", // Required
+         "CODEGPT_ORG_ID", // Optional
+         "CODEGPT_GRAPH_ID" // Optional
+        ]
       }
    }
-}
-```
-
-## Or clone and run the Server (STDIO mode)
-This is the recommended way to run the server locally. (stdio mode is the default mode for MCP servers)
-
-1. Clone the repository:
-```bash
-git clone https://github.com/JudiniLabs/mcp-code-graph.git
-cd mcp-code-graph
-```
-1. Install dependencies:
-```bash
-pnpm install
-```
-1. Build the project:
-```bash
-pnpm build
-```
-
-Set up your environment variables, or you could add them to your MCP client configuration.
-
-### Environment Variables in .env file
-
-1. Copy the example environment file:
-```bash
-cp .env.example .env
-```
-
-2. Configure the required environment variables:
-```
-CODEGPT_API_KEY=your-api-key
-CODEGPT_ORG_ID=your-org-id  # Optional
-CODEGPT_GRAPH_ID=your-graph-id  # Optional
-```
-
-## Integration with MCP Client
-
-Add the following configuration to your MCP client (Cursor, Claude Desktop, Windsurf, etc.)
-
-```json
-{
-  "mcpServers": {
-    "Deep Graph MCP Server": {
-      "command": "/path/to/node",
-      "args": ["/path/to/mcp-code-graph/dist/index.js"],
-    }
-  }
 }
 ```
 
@@ -108,41 +59,15 @@ Follow these steps to integrate Deep Graph MCP Server with Claude Code.
 ## Quick Setup
 
 ```bash
-claude mcp add "Deep Graph MCP Server" \
-  -e CODEGPT_API_KEY=your-api-key-here \
-  -e CODEGPT_ORG_ID=your-org-id-here \
-  -- /path/to/node \
-  /path/to/mcp-code-graph/dist/index.js
+claude mcp add "Deep Graph MCP" npx -- -y mcp-code-graph@latest CODEGPT_API_KEY CODEGPT_ORG_ID CODEGPT_GRAPH_ID
 ```
 
 **For team sharing**, add the `-s project` flag:
 
 ```bash
-claude mcp add "Deep Graph MCP Server" -s project \
-  -e CODEGPT_API_KEY=your-api-key-here \
-  -e CODEGPT_ORG_ID=your-org-id-here \
-  -- /path/to/node \
-  /path/to/mcp-code-graph/dist/index.js
+claude mcp add -s project "Deep Graph MCP" npx -- -y mcp-code-graph@latest CODEGPT_API_KEY CODEGPT_ORG_ID CODEGPT_GRAPH_ID
 ```
 
-## Manual Configuration
-
-Add to your `.mcp.json` file:
-
-```json
-{
-  "mcpServers": {
-    "Deep Graph MCP Server": {
-      "command": "/path/to/node",
-      "args": ["/path/to/mcp-code-graph/dist/index.js"],
-      "env": {
-        "CODEGPT_API_KEY": "your-api-key-here",
-        "CODEGPT_ORG_ID": "your-org-id-here"
-      }
-    }
-  }
-}
-```
 
 ## Verification
 
@@ -150,29 +75,11 @@ Add to your `.mcp.json` file:
 # Verify installation
 claude mcp list
 
+# Get server details
+claude mcp get "Deep Graph MCP"
+
 # Check server status
 /mcp
-```
-
-Replace `/path/to/node` with your Node.js path and update the credentials with your actual CodeGPT API key and organization ID.
-
-## Error Handling
-
-The server handles various error scenarios:
-
-- Missing API key validation
-- HTTP communication errors
-- Request timeout handling
-
-### Project Structure
-
-```
-├── src/
-│   └── index.ts      # Main server implementation
-├── build/            # Compiled JavaScript files
-├── .env             # Environment configuration(not included in version control)
-├── .gitignore       # Git ignore rules
-└── package.json    # Project metadata and dependencies
 ```
 
 ## Support
