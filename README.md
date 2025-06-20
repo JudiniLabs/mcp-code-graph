@@ -1,5 +1,5 @@
-# Depp Graph MCP Server by (CodeGPT)[https://codegpt.co/]
-A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) server that enables seamless interaction with Code Graphs by CodeGPT
+# Depp Graph MCP Server by [CodeGPT](https://codegpt.co/)
+A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) server that enables seamless interaction with Code Graphs.
 
 <img width="1373" alt="Screenshot 2025-06-11 at 14 01 15" src="https://github.com/user-attachments/assets/a588bafc-d5a8-4955-8d48-3addaf3ed71c" />
 
