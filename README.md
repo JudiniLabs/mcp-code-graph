@@ -29,8 +29,8 @@ Before using the CodeGPT MCP Server, ensure you have:
 
 1. A CodeGPT account (sign up at [app.codegpt.co](https://app.codegpt.co))
 2. Uploaded a repository to [Code Graph](https://help.codegpt.co/en/articles/9912447-code-graphs)
-3. An API key from [CodeGPT API Keys page](https://app.codegpt.co/user/api-keys)
-4. Your Organization ID (optional)
+3. Get your API Key from [CodeGPT API Keys page](https://app.codegpt.co/user/api-keys) (required).
+4. Get your Organization ID (optional) and Graph ID (optional).
 
 ## Installation
 
@@ -40,7 +40,7 @@ Add the following configuration to your MCP client (CodeGPT Extension, Cursor, C
 ```json
 {
    "mcpServers": {
-      "Code Graph MCP Server": {
+      "Deep Graph MCP": {
          "command": "npx",
          "args": ["-y" , "mcp-code-graph@latest", 
          "CODEGPT_API_KEY", // Required
@@ -59,13 +59,13 @@ Follow these steps to integrate Deep Graph MCP Server with Claude Code.
 ## Quick Setup
 
 ```bash
-claude mcp add "Deep Graph MCP" npx -- -y mcp-code-graph@latest CODEGPT_API_KEY CODEGPT_ORG_ID CODEGPT_GRAPH_ID
+claude mcp add "Deep Graph MCP" npx -- -y mcp-code-graph@latest CODEGPT_API_KEY
 ```
 
 **For team sharing**, add the `-s project` flag:
 
 ```bash
-claude mcp add -s project "Deep Graph MCP" npx -- -y mcp-code-graph@latest CODEGPT_API_KEY CODEGPT_ORG_ID CODEGPT_GRAPH_ID
+claude mcp add -s project "Deep Graph MCP" npx -- -y mcp-code-graph@latest CODEGPT_API_KEY
 ```
 
 
@@ -77,9 +77,6 @@ claude mcp list
 
 # Get server details
 claude mcp get "Deep Graph MCP"
-
-# Check server status
-/mcp
 ```
 
 ## Support
