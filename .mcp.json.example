@@ -1,0 +1,10 @@
+{
+   "mcpServers": {
+      "Deep Graph MCP": {
+         "command": "npx",
+         "args": ["-y" , "mcp-code-graph@latest", 
+         "CODEGPT_API_KEY" 
+        ]
+      }
+   }
+}

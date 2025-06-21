@@ -20,3 +20,6 @@ Thumbs.db
 .idea/
 *.vscode/
 *.idea/
+
+# MCP
+.mcp.json
