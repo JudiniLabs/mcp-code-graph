@@ -1,6 +1,6 @@
 {
 	"name": "mcp-code-graph",
-	"version": "1.0.12",
+	"version": "1.0.14",
 	"description": "Code Graph MCP Server",
 	"license": "MIT",
 	"type": "module",
