@@ -32,7 +32,7 @@ Before using the CodeGPT MCP Server, ensure you have:
 3. Get your API Key from [CodeGPT API Keys page](https://app.codegpt.co/user/api-keys) (required).
 4. Get your Organization ID (optional) and Graph ID (optional).
 
-## Installation
+# Installation
 
 ## Using npx
 Add the following configuration to your MCP client (CodeGPT Extension, Cursor, Copilot, Claude Desktop, Windsurf, etc.):
@@ -52,7 +52,7 @@ Add the following configuration to your MCP client (CodeGPT Extension, Cursor, C
 }
 ```
 
-# Adding to Claude Code
+## Adding to Claude Code
 
 Follow these steps to integrate Deep Graph MCP Server with Claude Code.
 
@@ -78,6 +78,10 @@ claude mcp list
 # Get server details
 claude mcp get "Deep Graph MCP"
 ```
+
+## 💫 Repository Stats
+
+![GitHub Repo stars](https://img.shields.io/github/stars/JudiniLabs/mcp-code-graph?style=social)
 
 ## Support
 
