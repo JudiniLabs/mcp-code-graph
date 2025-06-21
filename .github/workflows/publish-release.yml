@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: '18'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@judini'
+          scope: '@judinilabs'
 
       - name: Get package version
         id: package-version
@@ -86,7 +86,7 @@ jobs:
       - name: Update package.json for GitHub Packages
         run: |
           # Create a temporary package.json with GitHub Packages scope
-          jq '.name = "@judini/mcp-code-graph" | .publishConfig.registry = "https://npm.pkg.github.com"' package.json > package-gh.json
+          jq '.name = "@judinilabs/mcp-code-graph" | .publishConfig.registry = "https://npm.pkg.github.com"' package.json > package-gh.json
           mv package-gh.json package.json
 
       - name: Publish to GitHub Packages
