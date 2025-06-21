@@ -1,13 +1,16 @@
 name: Create GitHub Release on NPM Publish
 
 on:
-  registry_package:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version to create release for'
+        required: false
+        type: string
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
-    if: github.event.registry_package.package_version.package_url == 'https://www.npmjs.com/package/mcp-code-graph'
     
     steps:
       - name: Checkout code
@@ -28,7 +31,12 @@ jobs:
 
       - name: Get package version
         id: package-version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create Release
         uses: actions/create-release@v1
