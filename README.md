@@ -68,7 +68,6 @@ claude mcp add "Deep Graph MCP" npx -- -y mcp-code-graph@latest CODEGPT_API_KEY
 claude mcp add -s project "Deep Graph MCP" npx -- -y mcp-code-graph@latest CODEGPT_API_KEY
 ```
 
-
 ## Verification
 
 ```bash
@@ -77,6 +76,51 @@ claude mcp list
 
 # Get server details
 claude mcp get "Deep Graph MCP"
+```
+
+## Advanced Workflows with Claude Code Custom Commands
+
+Claude Code supports custom slash commands that combine multiple MCP Code Graph tools for comprehensive analysis workflows.
+
+### Setup
+
+**Copy the commands directory** from this repository to your project root:
+```bash
+cp -r .claude/ /path/to/your/project/
+```
+
+Commit to your project's git:
+```bash
+git add .claude/commands/
+git commit -m "Add custom Claude Code commands for Deep Graph MCP"
+```
+
+## Available Commands
+Repository-wide analysis commands (no parameters needed):
+
+```bash
+/project:analyze-architecture          # Complete architectural overview
+/project:security-audit               # Comprehensive security analysis
+/project:test-coverage-analyzer       # Test coverage and quality analysis
+/project:technical-debt-analyzer      # Technical debt assessment
+/project:api-ecosystem-analyzer       # Complete API ecosystem analysis
+/project:repository-onboarding        # Full repository onboarding guide
+```
+
+Component-specific commands (require parameters):
+```bash
+/project:migration-planner [component/technology]     # Smart migration planning
+/project:performance-optimizer [component/function]   # Performance optimization
+/project:component-onboarding [component/feature]     # Component-specific training
+```
+
+## Usage Examples
+
+```bash
+/project:analyze-architecture
+/project:migration-planner React to Vue.js
+/project:performance-optimizer DatabaseService.getUserData
+/project:component-onboarding authentication system
 ```
 
 ## 📈 Star History

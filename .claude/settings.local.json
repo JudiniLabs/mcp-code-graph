@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "Deep Graph MCP"
+  ],
+  "enableAllProjectMcpServers": true
+}
