@@ -7,7 +7,7 @@ A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) se
 
 This MCP allows you to interact with the knowledge graphs available in your CodeGPT account.
 
-You’ll be able to use these advanced graph-based queries across different MCP Hosts such as ChatGPT, Cursor, Windsurf, GitHub Copilot, Claude Desktop, and others.
+You’ll be able to use these advanced graph-based queries across different MCP Hosts such as ChatGPT, Cursor, Windsurf, CodeGPT Extension, GitHub Copilot, Claude Desktop, and others.
 
 ## Available Tools
 
