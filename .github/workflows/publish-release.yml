@@ -1,0 +1,105 @@
+name: Create Release and Publish to GitHub Packages
+
+on:
+  registry_package:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  create-release-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@judini'
+
+      - name: Get package version
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+          echo "tag_name=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if release exists
+        id: check-release
+        run: |
+          if gh release view ${{ steps.package-version.outputs.tag_name }} &>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate changelog
+        id: changelog
+        if: steps.check-release.outputs.exists == 'false'
+        run: |
+          # Get the latest tag (previous release)
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+          
+          if [ -z "$PREVIOUS_TAG" ]; then
+            # If no previous tag, get all commits
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --reverse)
+          else
+            # Get commits since last tag
+            CHANGELOG=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --reverse)
+          fi
+          
+          # Save changelog to file for multiline handling
+          echo "$CHANGELOG" > changelog.txt
+          
+          # Also set as output (truncated for safety)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        if: steps.check-release.outputs.exists == 'false'
+        run: |
+          gh release create ${{ steps.package-version.outputs.tag_name }} \
+            --title "Release ${{ steps.package-version.outputs.version }}" \
+            --notes-file changelog.txt \
+            --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Update package.json for GitHub Packages
+        run: |
+          # Create a temporary package.json with GitHub Packages scope
+          jq '.name = "@judini/mcp-code-graph" | .publishConfig.registry = "https://npm.pkg.github.com"' package.json > package-gh.json
+          mv package-gh.json package.json
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add release assets
+        if: steps.check-release.outputs.exists == 'false'
+        run: |
+          # Create a tarball
+          npm pack
+          TARBALL=$(ls *.tgz)
+          gh release upload ${{ steps.package-version.outputs.tag_name }} "$TARBALL"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
