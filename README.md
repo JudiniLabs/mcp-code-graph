@@ -79,9 +79,9 @@ claude mcp list
 claude mcp get "Deep Graph MCP"
 ```
 
-## 💫 Repository Stats
+## 📈 Star History
 
-![GitHub Repo stars](https://img.shields.io/github/stars/JudiniLabs/mcp-code-graph?style=social)
+[![Star History Chart](https://api.star-history.com/svg?repos=JudiniLabs/mcp-code-graph&type=Date)](https://star-history.com/#JudiniLabs/mcp-code-graph&Date)
 
 ## Support
 
