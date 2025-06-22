@@ -85,19 +85,22 @@ jobs:
 
       - name: Update package.json for GitHub Packages
         run: |
-          # Debug repository info and update package.json
+          # Debug info
           echo "Repository owner: ${{ github.repository_owner }}"
-          echo "Repository name: ${{ github.event.repository.name }}"
-          # Use Node.js to update package.json with correct scope
-          node -e "
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            const owner = '${{ github.repository_owner }}'.toLowerCase();
-            pkg.name = \`@\${owner}/mcp-code-graph\`;
-            pkg.publishConfig = { registry: 'https://npm.pkg.github.com' };
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-            console.log('Updated package name to:', pkg.name);
-          "
+          echo "Original package.json name:"
+          cat package.json | grep '"name"'
+          
+          # Use sed to replace the name directly
+          sed -i 's/"name": "mcp-code-graph"/"name": "@judinilabs\/mcp-code-graph"/' package.json
+          
+          # Add registry to publishConfig
+          npm pkg set publishConfig.registry=https://npm.pkg.github.com
+          
+          # Verify changes
+          echo "Updated package.json name:"
+          cat package.json | grep '"name"'
+          echo "Registry:"
+          cat package.json | grep -A2 '"publishConfig"'
 
       - name: Publish to GitHub Packages
         run: npm publish
