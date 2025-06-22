@@ -85,13 +85,15 @@ jobs:
 
       - name: Update package.json for GitHub Packages
         run: |
-          # Install jq if not available
-          sudo apt-get update && sudo apt-get install -y jq
-          # Create a temporary package.json with GitHub Packages scope
-          jq '.name = "@judinilabs/mcp-code-graph" | .publishConfig.registry = "https://npm.pkg.github.com"' package.json > package-gh.json
-          mv package-gh.json package.json
-          # Verify the change
-          echo "Updated package name:" && jq '.name' package.json
+          # Use Node.js to update package.json
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.name = '@judinilabs/mcp-code-graph';
+            pkg.publishConfig = { registry: 'https://npm.pkg.github.com' };
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+            console.log('Updated package name to:', pkg.name);
+          "
 
       - name: Publish to GitHub Packages
         run: npm publish
