@@ -1,3 +1,7 @@
+[![Open in DeepGraph](https://img.shields.io/badge/%E2%9C%A8%20Open%20in-DeepGraph-a465f7?style=flat)](https://deepgraph.co/JudiniLabs/mcp-code-graph)
+
+<hr>
+
 # Deep Graph MCP Server by [CodeGPT](https://codegpt.co/)
 A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) server that enables seamless interaction with Code Graphs.
 
