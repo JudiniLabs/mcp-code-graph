@@ -84,6 +84,20 @@ Add the following configuration to your MCP client:
 }
 ```
 
+## Adding to Gemini CLI
+
+Add the JSON configuration to your settings.json file:
+
+Gemini CLI uses settings.json files for persistent configuration. There are two locations for these files:
+
+- User settings file:
+Location: ~/.gemini/settings.json (where ~ is your home directory).
+Scope: Applies to all Gemini CLI sessions for the current user.
+
+- Project settings file:
+Location: .gemini/settings.json within your project's root directory.
+Scope: Applies only when running Gemini CLI from that specific project. Project settings override user settings.
+
 ## Adding to Claude Code
 
 Follow these steps to integrate Deep Graph MCP Server with Claude Code.
