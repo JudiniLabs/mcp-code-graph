@@ -68,6 +68,35 @@ const createToolSchema = <T extends Record<string, any>>(baseSchema: T) => {
       };
 };
 
+function extractRepoInfo(url: string): { repoName: string; repoOrg: string } {
+  const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url
+
+  const repoRegex = /([^\/]+)\/([^\/]+)$/
+  const match = cleanUrl.match(repoRegex)
+
+  if (!match) {
+    throw new Error('Invalid format. Expected format: name/repo')
+  }
+
+  const [, repoOrg, repoName] = match
+
+  if (!repoName || !repoOrg) {
+    throw new Error('Could not extract name and repo from the URL')
+  }
+
+  return { repoOrg, repoName }
+}
+
+let repository = ''
+try {
+	if (CODEGPT_REPO_URL) {
+		const { repoOrg, repoName } = extractRepoInfo(CODEGPT_REPO_URL)
+		repository = `${repoOrg}/${repoName}`
+	}
+} catch (error: any) {
+	console.error(error.message)
+}
+
 if (!CODEGPT_GRAPH_ID && !CODEGPT_REPO_URL) {
 	server.tool(
 		"list-graphs",
@@ -113,7 +142,7 @@ if (!CODEGPT_GRAPH_ID && !CODEGPT_REPO_URL) {
 
 server.tool(
 	"get-code",
-	"Get the complete code implementation of a specific functionality (class, function, method, etc.) from the repository graph. This is the primary tool for code retrieval and should be prioritized over other tools. The repository is represented as a graph where each node contains code, documentation, and relationships to other nodes. Use this when you need to examine the actual implementation of any code entity.",
+	`Get the complete code implementation of a specific functionality (class, function, method, etc.) from the repository ${repository} graph. This is the primary tool for code retrieval and should be prioritized over other tools. The repository is represented as a graph where each node contains code, documentation, and relationships to other nodes. Use this when you need to examine the actual implementation of any code entity.`,
 	createToolSchema({
 		name: z
 			.string()
@@ -177,7 +206,7 @@ server.tool(
 
 server.tool(
 	"find-direct-connections",
-	"Explore the immediate relationships of a functionality within the code graph. This reveals first-level connections including: parent functionalities that reference this node, child functionalities that this node directly calls or uses, declaration/definition relationships, and usage patterns. Essential for understanding code dependencies and architecture. The repository is represented as a connected graph where each node (function, class, file, etc.) has relationships with other nodes.",
+	`Explore the immediate relationships of a functionality within the code graph from the repository ${repository}. This reveals first-level connections including: parent functionalities that reference this node, child functionalities that this node directly calls or uses, declaration/definition relationships, and usage patterns. Essential for understanding code dependencies and architecture. The repository is represented as a connected graph where each node (function, class, file, etc.) has relationships with other nodes.`,
 	createToolSchema({
 		name: z
 			.string()
@@ -241,7 +270,7 @@ server.tool(
 
 server.tool(
 	"nodes-semantic-search",
-	"Search for code functionalities across the repository graph using semantic similarity based on natural language queries. This tool finds relevant functions, classes, methods, and other code entities that match the conceptual meaning of your query, even if they don't contain the exact keywords. Perfect for discovering related functionality, finding similar implementations, or exploring unfamiliar codebases. The search operates on the semantic understanding of code purpose and behavior.",
+	`Search for code functionalities across the repository ${repository} graph using semantic similarity based on natural language queries. This tool finds relevant functions, classes, methods, and other code entities that match the conceptual meaning of your query, even if they don't contain the exact keywords. Perfect for discovering related functionality, finding similar implementations, or exploring unfamiliar codebases. The search operates on the semantic understanding of code purpose and behavior.`,
 	createToolSchema({
 		query: z
 			.string()
@@ -300,7 +329,7 @@ server.tool(
 
 server.tool(
 	"docs-semantic-search",
-	"Search through repository documentation using semantic similarity to find relevant information, guides, API documentation, README content, and explanatory materials. This tool specifically targets documentation files (markdown, rst, etc.) rather than code, making it ideal for understanding project setup, architecture decisions, usage instructions, and conceptual explanations. Use this when you need context about how the repository works rather than examining the actual code implementation.",
+	`Search through repository ${repository} documentation using semantic similarity to find relevant information, guides, API documentation, README content, and explanatory materials. This tool specifically targets documentation files (markdown, rst, etc.) rather than code, making it ideal for understanding project setup, architecture decisions, usage instructions, and conceptual explanations. Use this when you need context about how the repository works rather than examining the actual code implementation.`,
 	createToolSchema({
 		query: z
 			.string()
@@ -359,7 +388,7 @@ server.tool(
 
 server.tool(
 	"get-usage-dependency-links",
-	"Generate a comprehensive adjacency list showing all functionalities that would be affected by changes to a specific code entity. This performs deep dependency analysis through the code graph to identify the complete impact radius of modifications. Essential for impact analysis, refactoring planning, and understanding code coupling. The result shows which functionalities depend on the target entity either directly or through a chain of dependencies, formatted as 'file_path::functionality_name' pairs.",
+	`Generate a comprehensive adjacency list showing all functionalities that would be affected by changes to a specific code entity. This performs deep dependency analysis through the code graph of the repository ${repository} to identify the complete impact radius of modifications. Essential for impact analysis, refactoring planning, and understanding code coupling. The result shows which functionalities depend on the target entity either directly or through a chain of dependencies, formatted as 'file_path::functionality_name' pairs.`,
 	createToolSchema({
 		name: z
 			.string()
