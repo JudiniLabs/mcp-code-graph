@@ -11,23 +11,27 @@ A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) se
 
 This MCP allows you to interact with the knowledge graphs available in your CodeGPT account or with public graphs from [DeepGraph](https://deepgraph.co).
 
-You'll be able to use these advanced graph-based queries across different MCP Hosts such as ChatGPT, Cursor, Windsurf, CodeGPT Extension, GitHub Copilot, Claude Desktop, and others.
+You'll be able to use these advanced graph-based queries across different MCP Hosts such as ChatGPT, Cursor, Windsurf, CodeGPT Extension, GitHub Copilot, Claude Desktop, Claude Code, Gemini CLI, and others.
 
 ## Available Tools
 
-`list_graphs`: Lists available repository graphs with basic information.
+- `list_graphs`: Lists available repository graphs with basic information.
 
-`get_code`: Retrieves the complete source code for a specific functionality from the graph.
+- `get_code`: Retrieves the complete source code for a specific functionality from the graph.
 
-`find_direct_connections`: Explores the direct relationships of a functionality within the code graph.
+- `find_direct_connections`: Explores the direct relationships of a functionality within the code graph.
 
-`nodes_semantic_search`: Semantically searches for code functionalities using natural language.
+- `nodes_semantic_search`: Semantically searches for code functionalities using natural language.
 
-`docs_semantic_search`: Semantically searches repository documentation.
+- `docs_semantic_search`: Semantically searches repository documentation.
 
-`get_usage_dependency_links`: Analyzes and lists functionalities affected by changes to a code entity.
+- `get_usage_dependency_links`: Analyzes and lists functionalities affected by changes to a code entity.
 
-## Prerequisites
+### For Public Graphs (No Account Required)
+You can interact with public graphs from [DeepGraph](https://deepgraph.co) without needing a CodeGPT account:
+
+1. Find any public repository on [deepgraph.co](https://deepgraph.co)
+2. Use the repository reference (e.g., `username/repository-name`)
 
 ### For Private Graphs (CodeGPT Account Required)
 Before using the CodeGPT MCP Server with private graphs, ensure you have:
@@ -37,15 +41,25 @@ Before using the CodeGPT MCP Server with private graphs, ensure you have:
 3. Get your API Key from [CodeGPT API Keys page](https://app.codegpt.co/user/api-keys) (required).
 4. Get your Organization ID (optional) and Graph ID (optional).
 
-### For Public Graphs (No Account Required)
-You can interact with public graphs from [DeepGraph](https://deepgraph.co) without needing a CodeGPT account:
-
-1. Find any public repository on [deepgraph.co](https://deepgraph.co)
-2. Use the repository reference (e.g., `username/repository-name`)
-
 # Installation
 
 ## Using npx
+
+### For Public Graphs
+Add the following configuration to your MCP client (CodeGPT Extension, Cursor, Copilot, Claude Desktop, Windsurf, etc.):
+
+```json
+{
+   "mcpServers": {
+      "Deep Graph MCP": {
+         "command": "npx",
+         "args": ["-y" , "mcp-code-graph@latest", 
+         "username/repository-name" // DeepGraph repository URL
+        ]
+      }
+   }
+}
+```
 
 ### For Private Graphs
 Add the following configuration to your MCP client (CodeGPT Extension, Cursor, Copilot, Claude Desktop, Windsurf, etc.):
@@ -60,25 +74,6 @@ Add the following configuration to your MCP client (CodeGPT Extension, Cursor, C
          "CODEGPT_ORG_ID", // Optional
          "CODEGPT_GRAPH_ID" // Optional
         ]
-      }
-   }
-}
-```
-
-### For Public Graphs
-Add the following configuration to your MCP client:
-
-```json
-{
-   "mcpServers": {
-      "Deep Graph MCP": {
-         "command": "npx",
-         "args": ["-y" , "mcp-code-graph@latest", 
-         "username/repository-name" // DeepGraph repository URL
-        ],
-         "env": {
-            "CODEGPT_REPO_URL": "username/repository-name" // Optional: can be set as env variable instead
-         }
       }
    }
 }
