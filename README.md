@@ -28,7 +28,7 @@ You'll be able to use these advanced graph-based queries across different MCP Ho
 - `get_usage_dependency_links`: Analyzes and lists functionalities affected by changes to a code entity.
 
 ## For Public Graphs (No Account Required)
-You can interact with public graphs from [DeepGraph](https://deepgraph.co) without needing a CodeGPT account:
+You can interact with public graphs from [DeepGraph](https://deepgraph.co):
 
 1. Find any public repository on [deepgraph.co](https://deepgraph.co)
 2. Use the repository reference (e.g., `username/repository-name`)
