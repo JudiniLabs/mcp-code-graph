@@ -27,25 +27,13 @@ You'll be able to use these advanced graph-based queries across different MCP Ho
 
 - `get_usage_dependency_links`: Analyzes and lists functionalities affected by changes to a code entity.
 
-### For Public Graphs (No Account Required)
+## For Public Graphs (No Account Required)
 You can interact with public graphs from [DeepGraph](https://deepgraph.co) without needing a CodeGPT account:
 
 1. Find any public repository on [deepgraph.co](https://deepgraph.co)
 2. Use the repository reference (e.g., `username/repository-name`)
 
-### For Private Graphs (CodeGPT Account Required)
-Before using the CodeGPT MCP Server with private graphs, ensure you have:
-
-1. A CodeGPT account (sign up at [app.codegpt.co](https://app.codegpt.co))
-2. Uploaded a repository to [Code Graph](https://help.codegpt.co/en/articles/9912447-code-graphs)
-3. Get your API Key from [CodeGPT API Keys page](https://app.codegpt.co/user/api-keys) (required).
-4. Get your Organization ID (optional) and Graph ID (optional).
-
-# Installation
-
-## Using npx
-
-### For Public Graphs
+## Installation using npx
 Add the following configuration to your MCP client (CodeGPT Extension, Cursor, Copilot, Claude Desktop, Windsurf, etc.):
 
 ```json
@@ -61,7 +49,15 @@ Add the following configuration to your MCP client (CodeGPT Extension, Cursor, C
 }
 ```
 
-### For Private Graphs
+### For Private Graphs (CodeGPT Account Required)
+Before using the CodeGPT MCP Server with private graphs, ensure you have:
+
+1. A CodeGPT account (sign up at [app.codegpt.co](https://app.codegpt.co))
+2. Uploaded a repository to [Code Graph](https://help.codegpt.co/en/articles/9912447-code-graphs)
+3. Get your API Key from [CodeGPT API Keys page](https://app.codegpt.co/user/api-keys) (required).
+4. Get your Organization ID (optional) and Graph ID (optional).
+
+### Installation with npx
 Add the following configuration to your MCP client (CodeGPT Extension, Cursor, Copilot, Claude Desktop, Windsurf, etc.):
 
 ```json
@@ -78,6 +74,8 @@ Add the following configuration to your MCP client (CodeGPT Extension, Cursor, C
    }
 }
 ```
+
+# CLI Providers
 
 ## Adding to Gemini CLI
 
