@@ -19,7 +19,9 @@ dotenv.config();
 
 console.error('Imports loaded successfully');
 
-const CODEGPT_API_BASE = "https://api-mcp.codegpt.co/api/v1";
+// const CODEGPT_API_BASE = "https://api-mcp.codegpt.co/api/v1";
+const CODEGPT_API_BASE = "http://localhost:8000/api/v1";
+
 
 const server = new McpServer({
 	name: "CodeGPT Deep Graph MCP",
@@ -394,6 +396,78 @@ server.tool(
           {
             type: "text",
             text: JSON.stringify(data, null, 2) || "No response data available",
+          },
+        ],
+      };
+    } catch (error) {
+      console.error("Error making CodeGPT request:", error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `${error}`,
+          },
+        ],
+      };
+    }
+  }
+);
+
+server.tool(
+  "folder-tree-structure",
+  `Returns the folder tree structure of the given folder path from the repository ${repository} graph. Useful to understand what files and subfolders are inside the given folder .`,
+  createToolSchema({
+    path: z
+      .string()
+      .optional()
+      .describe(
+        "The path to the folder to get the tree structure for. Example: 'src/components'. Leave empty to get the root folder tree structure."
+      ),
+  }),
+
+  async ({
+    path,
+    graphId,
+    repository,
+  }: {
+    path?: string;
+    graphId?: string;
+    repository?: string;
+  }) => {
+
+    const targetGraphId = getGraphId(graphId);
+    const targetRepoUrl = config.IS_MULTI_REPO
+      ? repository
+      : config.CODEGPT_REPO_URL;
+
+    const headers = {
+      accept: "application/json",
+      authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+      "CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
+      "content-type": "application/json",
+    };
+
+    try {
+      const response = await fetch(
+        `${CODEGPT_API_BASE}/mcp/graphs/folder-tree-structure`,
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            graphId: targetGraphId,
+            ...(targetRepoUrl ? { repoUrl: targetRepoUrl } : null),
+            path: path || "",
+          }),
+        }
+      );
+
+      const { content } = await response.json();
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: content || "No response data available",
           },
         ],
       };
