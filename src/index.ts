@@ -19,8 +19,7 @@ dotenv.config();
 
 console.error('Imports loaded successfully');
 
-// const CODEGPT_API_BASE = "https://api-mcp.codegpt.co/api/v1";
-const CODEGPT_API_BASE = "http://localhost:8000/api/v1";
+const CODEGPT_API_BASE = "https://api-mcp.codegpt.co/api/v1";
 
 
 const server = new McpServer({
