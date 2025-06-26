@@ -1,4 +1,4 @@
-[![Open in DeepGraph](https://img.shields.io/badge/Open%20in-DeepGraph-555-a465f7)](https://deepgraph.co/JudiniLabs/mcp-code-graph)
+[![Open in DeepGraph](https://img.shields.io/badge/%E2%9C%A8%20Open%20in-DeepGraph-a465f7?style=flat)](https://deepgraph.co/JudiniLabs/mcp-code-graph)
 
 <hr>
 
