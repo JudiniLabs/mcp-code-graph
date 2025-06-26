@@ -3,4 +3,6 @@ export const config = {
   CODEGPT_REPO_URL: process.env.CODEGPT_REPO_URL || "",
   CODEGPT_ORG_ID: process.env.CODEGPT_ORG_ID || "",
   CODEGPT_GRAPH_ID: process.env.CODEGPT_GRAPH_ID || "",
+  IS_MULTI_REPO: false,
+  REPO_LIST: [] as string[]
 }

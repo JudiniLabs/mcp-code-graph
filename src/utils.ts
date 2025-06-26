@@ -3,7 +3,7 @@ import { config } from "./config.js";
 
 // Helper function to get the graph ID
 const getGraphId = (providedGraphId?: string): string | null => {
-    if (config.CODEGPT_REPO_URL) {
+    if (config.CODEGPT_REPO_URL || config.IS_MULTI_REPO) {
         return null
     }
     if (config.CODEGPT_GRAPH_ID) {
@@ -15,17 +15,31 @@ const getGraphId = (providedGraphId?: string): string | null => {
     return providedGraphId;
 };
 
-
 const createToolSchema = <T extends Record<string, any>>(baseSchema: T) => {
-  return config.CODEGPT_GRAPH_ID || config.CODEGPT_REPO_URL
-    ? baseSchema 
-    : {
-        ...baseSchema,
-        graphId: z
-          .string()
-          .min(1, "Graph ID is required")
-          .describe("The ID of the graph to query")
-      };
+  const hasRepoAccess = config.CODEGPT_GRAPH_ID || config.CODEGPT_REPO_URL || config.IS_MULTI_REPO;
+  
+  let schema = hasRepoAccess ? baseSchema : {
+    ...baseSchema,
+    graphId: z
+      .string()
+      .min(1, "Graph ID is required")
+      .describe("The ID of the graph to query")
+  };
+
+  if (config.IS_MULTI_REPO) {
+    const repoList = config.REPO_LIST.join(", ");
+    schema = {
+      ...schema,
+      repository: z
+        .string()
+        .min(1, "Repository name is required")
+        .describe(
+          `The repository to query from the available repositories. Format is: org/repo. Available options are: ${repoList}`
+        ),
+    };
+  }
+
+  return schema;
 };
 
 function extractRepoInfo(url: string): { repoName: string; repoOrg: string } {
