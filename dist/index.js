@@ -8,6 +8,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import dotenv from "dotenv";
+import { config } from "./config.js";
+import { createToolSchema, extractRepoInfo, getGraphId } from "./utils.js";
 dotenv.config();
 console.error('Imports loaded successfully');
 const CODEGPT_API_BASE = "https://api-mcp.codegpt.co/api/v1";
@@ -21,71 +23,40 @@ const server = new McpServer({
         tools: {},
     },
 });
-let CODEGPT_API_KEY = process.env.CODEGPT_API_KEY || "";
-let CODEGPT_REPO_URL = process.env.CODEGPT_REPO_URL || "";
-const arg2 = process?.argv?.at(2)?.trim();
-if (arg2) {
-    if (arg2.includes('/') && !arg2.startsWith("sk-")) {
-        CODEGPT_API_KEY = "";
-        CODEGPT_REPO_URL = arg2;
-    }
-    CODEGPT_API_KEY = arg2;
+const args = process.argv.slice(2);
+const repoUrls = args.filter(arg => arg.includes('/') && !arg.startsWith("sk-"));
+const apiKey = args.find(arg => arg.startsWith("sk-"));
+if (repoUrls.length > 1) {
+    // Multi-repo mode
+    config.IS_MULTI_REPO = true;
+    config.REPO_LIST = repoUrls;
+    config.CODEGPT_API_KEY = apiKey || config.CODEGPT_API_KEY;
 }
-const CODEGPT_ORG_ID = process.env.CODEGPT_ORG_ID || process?.argv?.at(3) || "";
-const CODEGPT_GRAPH_ID = process.env.CODEGPT_GRAPH_ID || process?.argv?.at(4) || "";
-// Helper function to get the graph ID
-const getGraphId = (providedGraphId) => {
-    if (CODEGPT_REPO_URL) {
-        return null;
-    }
-    if (CODEGPT_GRAPH_ID) {
-        return CODEGPT_GRAPH_ID;
-    }
-    if (!providedGraphId) {
-        throw new Error("Graph ID is required. Either set CODEGPT_GRAPH_ID environment variable or provide graphId parameter.");
-    }
-    return providedGraphId;
-};
-const createToolSchema = (baseSchema) => {
-    return CODEGPT_GRAPH_ID || CODEGPT_REPO_URL
-        ? baseSchema
-        : {
-            ...baseSchema,
-            graphId: z
-                .string()
-                .min(1, "Graph ID is required")
-                .describe("The ID of the graph to query")
-        };
-};
-function extractRepoInfo(url) {
-    const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url;
-    const repoRegex = /([^\/]+)\/([^\/]+)$/;
-    const match = cleanUrl.match(repoRegex);
-    if (!match) {
-        throw new Error('Invalid format. Expected format: name/repo');
-    }
-    const [, repoOrg, repoName] = match;
-    if (!repoName || !repoOrg) {
-        throw new Error('Could not extract name and repo from the URL');
-    }
-    return { repoOrg, repoName };
+else if (repoUrls.length === 1) {
+    // Single repo mode
+    config.CODEGPT_REPO_URL = repoUrls[0];
+    config.CODEGPT_API_KEY = apiKey || config.CODEGPT_API_KEY;
+}
+else if (apiKey) {
+    // API key only
+    config.CODEGPT_API_KEY = apiKey;
 }
 let repository = '';
 try {
-    if (CODEGPT_REPO_URL) {
-        const { repoOrg, repoName } = extractRepoInfo(CODEGPT_REPO_URL);
+    if (config.CODEGPT_REPO_URL && !config.IS_MULTI_REPO) {
+        const { repoOrg, repoName } = extractRepoInfo(config.CODEGPT_REPO_URL);
         repository = `${repoOrg}/${repoName}`;
     }
 }
 catch (error) {
     console.error(error.message);
 }
-if (!CODEGPT_GRAPH_ID && !CODEGPT_REPO_URL) {
+if (!config.CODEGPT_GRAPH_ID && !config.CODEGPT_REPO_URL && !config.IS_MULTI_REPO) {
     server.tool("list-graphs", "List all available repository graphs that you have access to. Returns basic information about each graph including the graph ID, repository name with branch, and description. Use this tool when you need to discover available graphs.", {}, async () => {
         const headers = {
             accept: "application/json",
-            authorization: `Bearer ${CODEGPT_API_KEY}`,
-            "CodeGPT-Org-Id": CODEGPT_ORG_ID,
+            authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+            "CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
         };
         try {
             const response = await fetch(`${CODEGPT_API_BASE}/mcp/graphs`, {
@@ -124,15 +95,16 @@ server.tool("get-code", `Get the complete code implementation of a specific func
         .string()
         .optional()
         .describe("The origin file path where the functionality is defined. Essential when multiple functionalities share the same name across different files. Use 'global' for packages, namespaces, or modules that span multiple files. Examples: 'src/services/user.service.ts', 'global', 'lib/utils/helpers.js'"),
-}), async ({ name, path, graphId }) => {
+}), async ({ name, path, graphId, repository }) => {
     if (!name) {
         throw new Error("name is required");
     }
     const targetGraphId = getGraphId(graphId);
+    const targetRepoUrl = config.IS_MULTI_REPO ? repository : config.CODEGPT_REPO_URL;
     const headers = {
         accept: "application/json",
-        authorization: `Bearer ${CODEGPT_API_KEY}`,
-        "CodeGPT-Org-Id": CODEGPT_ORG_ID,
+        authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+        "CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
         "content-type": "application/json",
     };
     try {
@@ -142,8 +114,8 @@ server.tool("get-code", `Get the complete code implementation of a specific func
             body: JSON.stringify({
                 graphId: targetGraphId,
                 name,
-                ...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
-                ...(path ? { path } : null)
+                ...(targetRepoUrl ? { repoUrl: targetRepoUrl } : null),
+                ...(path ? { path } : null),
             }),
         });
         const { content } = await response.json();
@@ -177,15 +149,16 @@ server.tool("find-direct-connections", `Explore the immediate relationships of a
         .string()
         .optional()
         .describe("The origin file path of the functionality. Critical when multiple functionalities have identical names in different files. Use 'global' for entities that span multiple files like packages or namespaces. Examples: 'src/controllers/payment.controller.ts', 'global', 'utils/validation.js'"),
-}), async ({ name, path, graphId }) => {
+}), async ({ name, path, graphId, repository }) => {
     if (!name) {
         throw new Error("name is required");
     }
     const targetGraphId = getGraphId(graphId);
+    const targetRepoUrl = config.IS_MULTI_REPO ? repository : config.CODEGPT_REPO_URL;
     const headers = {
         accept: "application/json",
-        authorization: `Bearer ${CODEGPT_API_KEY}`,
-        "CodeGPT-Org-Id": CODEGPT_ORG_ID,
+        authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+        "CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
         "content-type": "application/json",
     };
     try {
@@ -195,8 +168,8 @@ server.tool("find-direct-connections", `Explore the immediate relationships of a
             body: JSON.stringify({
                 graphId: targetGraphId,
                 name,
-                ...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
-                ...(path ? { path } : null)
+                ...(targetRepoUrl ? { repoUrl: targetRepoUrl } : null),
+                ...(path ? { path } : null),
             }),
         });
         const { content } = await response.json();
@@ -226,15 +199,16 @@ server.tool("nodes-semantic-search", `Search for code functionalities across the
         .string()
         .min(1, "query is required")
         .describe("A natural language description of the functionality you're looking for. Be specific about the behavior, purpose, or domain. Examples: 'user authentication and login', 'database connection pooling', 'file upload validation', 'payment processing logic', 'error handling middleware', 'data encryption utilities'"),
-}), async ({ query, graphId }) => {
+}), async ({ query, graphId, repository }) => {
     if (!query) {
         throw new Error("query is required");
     }
     const targetGraphId = getGraphId(graphId);
+    const targetRepoUrl = config.IS_MULTI_REPO ? repository : config.CODEGPT_REPO_URL;
     const headers = {
         accept: "application/json",
-        authorization: `Bearer ${CODEGPT_API_KEY}`,
-        "CodeGPT-Org-Id": CODEGPT_ORG_ID,
+        authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+        "CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
         "content-type": "application/json",
     };
     try {
@@ -244,7 +218,7 @@ server.tool("nodes-semantic-search", `Search for code functionalities across the
             body: JSON.stringify({
                 graphId: targetGraphId,
                 query,
-                ...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
+                ...(targetRepoUrl ? { repoUrl: targetRepoUrl } : null),
             }),
         });
         const { content } = await response.json();
@@ -274,15 +248,16 @@ server.tool("docs-semantic-search", `Search through repository ${repository} doc
         .string()
         .min(1, "query is required")
         .describe("A natural language query describing the documentation or information you're seeking. Focus on concepts, setup procedures, architecture, or usage patterns. Examples: 'how to set up the development environment', 'API authentication methods', 'project architecture overview', 'contributing guidelines', 'deployment instructions', 'configuration options'"),
-}), async ({ query, graphId }) => {
+}), async ({ query, graphId, repository }) => {
     if (!query) {
         throw new Error("query is required");
     }
     const targetGraphId = getGraphId(graphId);
+    const targetRepoUrl = config.IS_MULTI_REPO ? repository : config.CODEGPT_REPO_URL;
     const headers = {
         accept: "application/json",
-        authorization: `Bearer ${CODEGPT_API_KEY}`,
-        "CodeGPT-Org-Id": CODEGPT_ORG_ID,
+        authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+        "CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
         "content-type": "application/json",
     };
     try {
@@ -292,7 +267,7 @@ server.tool("docs-semantic-search", `Search through repository ${repository} doc
             body: JSON.stringify({
                 graphId: targetGraphId,
                 query,
-                ...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
+                ...(targetRepoUrl ? { repoUrl: targetRepoUrl } : null),
             }),
         });
         const data = await response.json();
@@ -301,6 +276,54 @@ server.tool("docs-semantic-search", `Search through repository ${repository} doc
                 {
                     type: "text",
                     text: JSON.stringify(data, null, 2) || "No response data available",
+                },
+            ],
+        };
+    }
+    catch (error) {
+        console.error("Error making CodeGPT request:", error);
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: `${error}`,
+                },
+            ],
+        };
+    }
+});
+server.tool("folder-tree-structure", `Returns the folder tree structure of the given folder path from the repository ${repository} graph. Useful to understand what files and subfolders are inside the given folder. To access to a file content, use get-code tool.`, createToolSchema({
+    path: z
+        .string()
+        .optional()
+        .describe("The path to the folder to get the tree structure for. Example: 'src/components'. Leave empty to get the root folder tree structure."),
+}), async ({ path, graphId, repository, }) => {
+    const targetGraphId = getGraphId(graphId);
+    const targetRepoUrl = config.IS_MULTI_REPO
+        ? repository
+        : config.CODEGPT_REPO_URL;
+    const headers = {
+        accept: "application/json",
+        authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+        "CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
+        "content-type": "application/json",
+    };
+    try {
+        const response = await fetch(`${CODEGPT_API_BASE}/mcp/graphs/folder-tree-structure`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+                graphId: targetGraphId,
+                ...(targetRepoUrl ? { repoUrl: targetRepoUrl } : null),
+                path: path || "",
+            }),
+        });
+        const { content } = await response.json();
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: content || "No response data available",
                 },
             ],
         };
@@ -326,15 +349,16 @@ server.tool("get-usage-dependency-links", `Generate a comprehensive adjacency li
         .string()
         .optional()
         .describe("The origin file path where the functionality is defined. Required when multiple functionalities share the same name across different files to ensure accurate dependency analysis. Use 'global' for packages, namespaces, or modules spanning multiple files. Examples: 'src/database/connection.service.ts', 'global', 'lib/validation/input.validator.js'"),
-}), async ({ name, path, graphId }) => {
+}), async ({ name, path, graphId, repository }) => {
     if (!name) {
         throw new Error("name is required");
     }
     const targetGraphId = getGraphId(graphId);
+    const targetRepoUrl = config.IS_MULTI_REPO ? repository : config.CODEGPT_REPO_URL;
     const headers = {
         accept: "application/json",
-        authorization: `Bearer ${CODEGPT_API_KEY}`,
-        "CodeGPT-Org-Id": CODEGPT_ORG_ID,
+        authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+        "CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
         "content-type": "application/json",
     };
     try {
@@ -344,8 +368,8 @@ server.tool("get-usage-dependency-links", `Generate a comprehensive adjacency li
             body: JSON.stringify({
                 graphId: targetGraphId,
                 name,
-                ...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
-                ...(path ? { path } : null)
+                ...(targetRepoUrl ? { repoUrl: targetRepoUrl } : null),
+                ...(path ? { path } : null),
             }),
         });
         const { content } = await response.json();
@@ -373,14 +397,16 @@ server.tool("get-usage-dependency-links", `Generate a comprehensive adjacency li
 async function main() {
     try {
         console.error("=== DEBUG INFO ===");
-        console.error("CODEGPT_API_KEY:", CODEGPT_API_KEY ? "SET" : "NOT SET");
-        console.error("CODEGPT_ORG_ID:", CODEGPT_ORG_ID ? "SET" : "NOT SET");
-        console.error("CODEGPT_GRAPH_ID:", CODEGPT_GRAPH_ID ? "SET" : "NOT SET");
-        console.error("CODEGPT_REPO_URL:", CODEGPT_REPO_URL ? "SET" : "NOT SET");
+        console.error("CODEGPT_API_KEY:", config.CODEGPT_API_KEY ? "SET" : "NOT SET");
+        console.error("CODEGPT_ORG_ID:", config.CODEGPT_ORG_ID ? "SET" : "NOT SET");
+        console.error("CODEGPT_GRAPH_ID:", config.CODEGPT_GRAPH_ID ? "SET" : "NOT SET");
+        console.error("CODEGPT_REPO_URL:", config.CODEGPT_REPO_URL ? "SET" : "NOT SET");
+        console.error("IS_MULTI_REPO:", config.IS_MULTI_REPO ? "SET" : "NOT SET");
+        console.error("REPO_LIST:", config.REPO_LIST ? "SET" : "NOT");
         console.error("All env vars:", Object.keys(process.env).filter(key => key.startsWith('CODEGPT')));
         console.error("==================");
-        if (!CODEGPT_API_KEY && !CODEGPT_REPO_URL) {
-            throw new Error("CODEGPT_API_KEY is not set");
+        if (!config.CODEGPT_API_KEY && !config.CODEGPT_REPO_URL && !config.IS_MULTI_REPO) {
+            throw new Error("config.CODEGPT_API_KEY is not set");
         }
         console.error("About to create StdioServerTransport...");
         const transport = new StdioServerTransport();
