@@ -414,7 +414,7 @@ server.tool(
 
 server.tool(
   "folder-tree-structure",
-  `Returns the folder tree structure of the given folder path from the repository ${repository} graph. Useful to understand what files and subfolders are inside the given folder .`,
+  `Returns the folder tree structure of the given folder path from the repository ${repository} graph. Useful to understand what files and subfolders are inside the given folder. To access to a file content, use get-code tool.`,
   createToolSchema({
     path: z
       .string()
