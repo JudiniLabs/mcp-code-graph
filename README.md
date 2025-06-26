@@ -15,17 +15,19 @@ You'll be able to use these advanced graph-based queries across different MCP Ho
 
 ## Available Tools
 
-- `list_graphs`: Lists available repository graphs with basic information.
+- `list-graphs`: Lists available repository graphs with basic information.
 
-- `get_code`: Retrieves the complete source code for a specific functionality from the graph.
+- `get-code`: Retrieves the complete source code for a specific functionality from the graph.
 
-- `find_direct_connections`: Explores the direct relationships of a functionality within the code graph.
+- `find-direct-connections`: Explores the direct relationships of a functionality within the code graph.
 
-- `nodes_semantic_search`: Semantically searches for code functionalities using natural language.
+- `nodes-semantic-search`: Semantically searches for code functionalities using natural language.
 
-- `docs_semantic_search`: Semantically searches repository documentation.
+- `docs-semantic-search`: Semantically searches repository documentation.
 
-- `get_usage_dependency_links`: Analyzes and lists functionalities affected by changes to a code entity.
+- `get-usage-dependency-links`: Analyzes and lists functionalities affected by changes to a code entity.
+
+- `folder-tree-structure`: Retrieves the tree structure of a folder in the repository.
 
 ## For Public Graphs (No Account Required)
 You can interact with public graphs from [DeepGraph](https://deepgraph.co):
