@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+
 console.error('MCP Code Graph starting...');
 console.error('Environment check:', {
   CODEGPT_API_KEY: process.env.CODEGPT_API_KEY ? 'SET' : 'NOT SET',
@@ -10,6 +11,9 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import dotenv from "dotenv";
+import { config } from "./config.js";
+import { createToolSchema, extractRepoInfo, getGraphId } from "./utils.js";
+
 
 dotenv.config();
 
@@ -28,76 +32,26 @@ const server = new McpServer({
 	},
 });
 
-let CODEGPT_API_KEY = process.env.CODEGPT_API_KEY || "";
-let CODEGPT_REPO_URL = process.env.CODEGPT_REPO_URL || "";
 const arg2 = process?.argv?.at(2)?.trim()
 if (arg2) {
 	if (arg2.includes('/') && !arg2.startsWith("sk-")) {
-		CODEGPT_API_KEY = "";
-		CODEGPT_REPO_URL = arg2;
+		config.CODEGPT_API_KEY = "";
+		config.CODEGPT_REPO_URL = arg2;
 	}
-	CODEGPT_API_KEY = arg2;
-}
-const CODEGPT_ORG_ID = process.env.CODEGPT_ORG_ID || process?.argv?.at(3) || "";
-const CODEGPT_GRAPH_ID = process.env.CODEGPT_GRAPH_ID || process?.argv?.at(4) || "";
-
-// Helper function to get the graph ID
-const getGraphId = (providedGraphId?: string): string | null => {
-	if (CODEGPT_REPO_URL) {
-		return null
-	}
-	if (CODEGPT_GRAPH_ID) {
-		return CODEGPT_GRAPH_ID;
-	}
-	if (!providedGraphId) {
-		throw new Error("Graph ID is required. Either set CODEGPT_GRAPH_ID environment variable or provide graphId parameter.");
-	}
-	return providedGraphId;
-};
-
-
-const createToolSchema = <T extends Record<string, any>>(baseSchema: T) => {
-  return CODEGPT_GRAPH_ID || CODEGPT_REPO_URL
-    ? baseSchema 
-    : {
-        ...baseSchema,
-        graphId: z
-          .string()
-          .min(1, "Graph ID is required")
-          .describe("The ID of the graph to query")
-      };
-};
-
-function extractRepoInfo(url: string): { repoName: string; repoOrg: string } {
-  const cleanUrl = url.endsWith('/') ? url.slice(0, -1) : url
-
-  const repoRegex = /([^\/]+)\/([^\/]+)$/
-  const match = cleanUrl.match(repoRegex)
-
-  if (!match) {
-    throw new Error('Invalid format. Expected format: name/repo')
-  }
-
-  const [, repoOrg, repoName] = match
-
-  if (!repoName || !repoOrg) {
-    throw new Error('Could not extract name and repo from the URL')
-  }
-
-  return { repoOrg, repoName }
+	config.CODEGPT_API_KEY = arg2;
 }
 
 let repository = ''
 try {
-	if (CODEGPT_REPO_URL) {
-		const { repoOrg, repoName } = extractRepoInfo(CODEGPT_REPO_URL)
+	if (config.CODEGPT_REPO_URL) {
+		const { repoOrg, repoName } = extractRepoInfo(config.CODEGPT_REPO_URL)
 		repository = `${repoOrg}/${repoName}`
 	}
 } catch (error: any) {
 	console.error(error.message)
 }
 
-if (!CODEGPT_GRAPH_ID && !CODEGPT_REPO_URL) {
+if (!config.CODEGPT_GRAPH_ID && !config.CODEGPT_REPO_URL) {
 	server.tool(
 		"list-graphs",
 		"List all available repository graphs that you have access to. Returns basic information about each graph including the graph ID, repository name with branch, and description. Use this tool when you need to discover available graphs.",
@@ -105,8 +59,8 @@ if (!CODEGPT_GRAPH_ID && !CODEGPT_REPO_URL) {
 		async () => {
 			const headers = {
 				accept: "application/json",
-				authorization: `Bearer ${CODEGPT_API_KEY}`,
-				"CodeGPT-Org-Id": CODEGPT_ORG_ID,
+				authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+				"CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
 			};
 
 			try {
@@ -163,8 +117,8 @@ server.tool(
 		
 		const headers = {
 			accept: "application/json",
-			authorization: `Bearer ${CODEGPT_API_KEY}`,
-			"CodeGPT-Org-Id": CODEGPT_ORG_ID,
+			authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+			"CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
 			"content-type": "application/json",
 		};
 
@@ -175,7 +129,7 @@ server.tool(
 				body: JSON.stringify({
 					graphId: targetGraphId,
 					name,
-					...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
+					...(config.CODEGPT_REPO_URL ? { repoUrl: config.CODEGPT_REPO_URL } : null),
 					...(path ? { path } : null)
 				}),
 			});
@@ -227,8 +181,8 @@ server.tool(
 		
 		const headers = {
 			accept: "application/json",
-			authorization: `Bearer ${CODEGPT_API_KEY}`,
-			"CodeGPT-Org-Id": CODEGPT_ORG_ID,
+			authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+			"CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
 			"content-type": "application/json",
 		};
 
@@ -239,7 +193,7 @@ server.tool(
 				body: JSON.stringify({
 					graphId: targetGraphId,
 					name,
-					...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
+					...(config.CODEGPT_REPO_URL ? { repoUrl: config.CODEGPT_REPO_URL } : null),
 					...(path ? { path } : null)
 				}),
 			});
@@ -287,8 +241,8 @@ server.tool(
 		
 		const headers = {
 			accept: "application/json",
-			authorization: `Bearer ${CODEGPT_API_KEY}`,
-			"CodeGPT-Org-Id": CODEGPT_ORG_ID,
+			authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+			"CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
 			"content-type": "application/json",
 		};
 
@@ -299,7 +253,7 @@ server.tool(
 				body: JSON.stringify({
 					graphId: targetGraphId,
 					query,
-					...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
+					...(config.CODEGPT_REPO_URL ? { repoUrl: config.CODEGPT_REPO_URL } : null),
 				}),
 			});
 
@@ -346,8 +300,8 @@ server.tool(
 		
 		const headers = {
 			accept: "application/json",
-			authorization: `Bearer ${CODEGPT_API_KEY}`,
-			"CodeGPT-Org-Id": CODEGPT_ORG_ID,
+			authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+			"CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
 			"content-type": "application/json",
 		};
 
@@ -358,7 +312,7 @@ server.tool(
 				body: JSON.stringify({
 					graphId: targetGraphId,
 					query,
-					...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
+					...(config.CODEGPT_REPO_URL ? { repoUrl: config.CODEGPT_REPO_URL } : null),
 				}),
 			});
 
@@ -409,8 +363,8 @@ server.tool(
 		
 		const headers = {
 			accept: "application/json",
-			authorization: `Bearer ${CODEGPT_API_KEY}`,
-			"CodeGPT-Org-Id": CODEGPT_ORG_ID,
+			authorization: `Bearer ${config.CODEGPT_API_KEY}`,
+			"CodeGPT-Org-Id": config.CODEGPT_ORG_ID,
 			"content-type": "application/json",
 		};
 
@@ -421,7 +375,7 @@ server.tool(
 				body: JSON.stringify({
 					graphId: targetGraphId,
 					name,
-					...(CODEGPT_REPO_URL ? { repoUrl: CODEGPT_REPO_URL } : null),
+					...(config.CODEGPT_REPO_URL ? { repoUrl: config.CODEGPT_REPO_URL } : null),
 					...(path ? { path } : null)
 				}),
 			});
@@ -453,16 +407,16 @@ server.tool(
 async function main() {
     try {
         console.error("=== DEBUG INFO ===");
-        console.error("CODEGPT_API_KEY:", CODEGPT_API_KEY ? "SET" : "NOT SET");
-        console.error("CODEGPT_ORG_ID:", CODEGPT_ORG_ID ? "SET" : "NOT SET");
-        console.error("CODEGPT_GRAPH_ID:", CODEGPT_GRAPH_ID ? "SET" : "NOT SET");
-		console.error("CODEGPT_REPO_URL:", CODEGPT_REPO_URL ? "SET" : "NOT SET");
+        console.error("config.CODEGPT_API_KEY:", config.CODEGPT_API_KEY ? "SET" : "NOT SET");
+        console.error("config.CODEGPT_ORG_ID:", config.CODEGPT_ORG_ID ? "SET" : "NOT SET");
+        console.error("config.CODEGPT_GRAPH_ID:", config.CODEGPT_GRAPH_ID ? "SET" : "NOT SET");
+		console.error("config.CODEGPT_REPO_URL:", config.CODEGPT_REPO_URL ? "SET" : "NOT SET");
         console.error("All env vars:", Object.keys(process.env).filter(key => key.startsWith('CODEGPT')));
         console.error("==================");
         
 
-        if (!CODEGPT_API_KEY && !CODEGPT_REPO_URL) {
-            throw new Error("CODEGPT_API_KEY is not set");
+        if (!config.CODEGPT_API_KEY && !config.CODEGPT_REPO_URL) {
+            throw new Error("config.CODEGPT_API_KEY is not set");
         }
         
         console.error("About to create StdioServerTransport...");
