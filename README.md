@@ -42,7 +42,8 @@ Add the following configuration to your MCP client (CodeGPT Extension, Cursor, C
       "Deep Graph MCP": {
          "command": "npx",
          "args": ["-y" , "mcp-code-graph@latest", 
-         "username/repository-name" // DeepGraph repository URL
+         "username/repository-name",  // DeepGraph repository URL
+         "username2/repository-name2" // Add more repositories if needed
         ]
       }
    }
@@ -113,7 +114,7 @@ claude mcp add "Deep Graph MCP" npx -- -y mcp-code-graph@latest username/reposit
 ```bash
 claude mcp add -s project "Deep Graph MCP" npx -- -y mcp-code-graph@latest CODEGPT_API_KEY
 # or for public graphs
-claude mcp add -s project "Deep Graph MCP" npx -- -y mcp-code-graph@latest username/repository-name
+claude mcp add -s project "Deep Graph MCP" npx -- -y mcp-code-graph@latest username/repository-name username2/repository-name
 ```
 
 ## Verification
