@@ -11,6 +11,8 @@ A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) se
 
 This MCP allows you to interact with the knowledge graphs available in your CodeGPT account or with public graphs from [DeepGraph](https://deepgraph.co).
 
+<video src="https://github.com/user-attachments/assets/31f60fe6-6da4-4c67-a845-031908476351" controls autoplay></video>
+
 You'll be able to use these advanced graph-based queries across different MCP Hosts such as ChatGPT, Cursor, Windsurf, CodeGPT Extension, GitHub Copilot, Claude Desktop, Claude Code, Gemini CLI, and others.
 
 ## Available Tools
