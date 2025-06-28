@@ -9,7 +9,11 @@ A [Model Context Protocol](https://modelcontextprotocol.io/quickstart/server) se
 
 ## How this works
 
-This MCP allows you to interact with the knowledge graphs available in your CodeGPT account or with public graphs from [DeepGraph](https://deepgraph.co).
+This MCP allows you to interact with knowledge graphs available in your CodeGPT account or with public graphs from [DeepGraph](https://deepgraph.co).
+
+To create a graph from any GitHub repository, simply change the URL from `github.com` to `deepgraph.co`. For example:
+- GitHub repo: `https://github.com/username/repo`
+- DeepGraph URL: `https://deepgraph.co/username/repo`
 
 <video src="https://github.com/user-attachments/assets/31f60fe6-6da4-4c67-a845-031908476351" controls autoplay></video>
 
@@ -31,7 +35,7 @@ You'll be able to use these advanced graph-based queries across different MCP Ho
 
 - `folder-tree-structure`: Retrieves the tree structure of a folder in the repository.
 
-## For Public Graphs (No Account Required)
+## For Public Code Graphs (No Account Required)
 You can interact with public graphs from [DeepGraph](https://deepgraph.co):
 
 1. Find any public repository on [deepgraph.co](https://deepgraph.co)
