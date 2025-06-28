@@ -86,6 +86,8 @@ Add the following configuration to your MCP client (CodeGPT Extension, Cursor, C
 
 Add the JSON configuration to your settings.json file:
 
+<video src="https://github.com/user-attachments/assets/22f601dd-0564-46ac-8973-161de3017e34" controls autoplay></video>
+
 Gemini CLI uses settings.json files for persistent configuration. There are two locations for these files:
 
 - User settings file:
