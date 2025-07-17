@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/judinilabs-mcp-code-graph-badge.png)](https://mseep.ai/app/judinilabs-mcp-code-graph)
+
 [![Open in DeepGraph](https://img.shields.io/badge/%E2%9C%A8%20Open%20in-DeepGraph-a465f7?style=flat)](https://deepgraph.co/JudiniLabs/mcp-code-graph)
 [![GitHub stars](https://img.shields.io/github/stars/JudiniLabs/mcp-code-graph?style=flat&logo=github)](https://github.com/JudiniLabs/mcp-code-graph/stargazers)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/JudiniLabs/mcp-code-graph?style=flat&logo=github)](https://github.com/JudiniLabs/mcp-code-graph/pulls)
